@@ -9,24 +9,22 @@ const server = net.createServer((socket) => {
     const requestData = data.toString(); // Convert the buffer to a string
     const requestLines = requestData.split("\r\n"); // Split by line breaks
     const firstLine = requestLines[0]; // First line contains the request method, path, and HTTP version
-    const thirdLine = requestLines[2];
+    const headerValue = requestLines.find((line) => line.includes('User-Agent')).replace('User-Agent: ', '');;
 
-    console.log("requestLines", requestLines)
+    console.log("requestLines", headerValue)
     // Split the first line by spaces to extract method and path
     const [method, path,] = firstLine.split(" ");
-    const [key, value] = thirdLine.split(":")
 
     console.log("Method:", method);
     console.log("Path:", path);
-    console.log("value", value)
 
     if(path.startsWith('/echo/')) {
         const content = path.replace('/echo/', '');
         socket.write(`HTTP/1.1 200 OK\r\n`+`Content-Type: text/plain\r\n` + `Content-Length: ${content.length}\r\n` + `\r\n` + `${content}`);
     }
-    else if(path == '/user-agent') {
-      // const content = path.replace('/echo/', '');
-      socket.write(`HTTP/1.1 200 OK\r\n`+`Content-Type: text/plain\r\n` + `Content-Length: ${value.length}\r\n` + `\r\n` + `${value.slice(1)}`);
+    else if(path.startsWith('/user-agent')) {
+      socket.write(`HTTP/1.1 200 OK\r\n`+`Content-Type: text/plain\r\n` + `Content-Length: ${headerValue.length}\r\n` + `\r\n` + `${headerValue.slice(1)}`);
+      return;
     }
     else if(path == '/') {
         socket.write("HTTP/1.1 200 OK\r\n\r\n")

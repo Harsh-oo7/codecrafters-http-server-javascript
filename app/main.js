@@ -21,7 +21,7 @@ if (cluster.isMaster) {
       const firstLine = requestLines[0]; // First line contains the request method, path, and HTTP version
       const headerValue = requestLines.find((line) => line?.includes('User-Agent'))?.replace('User-Agent: ', '');;
   
-      console.log("requestLines", headerValue)
+      console.log("requestLines", requestLines)
       // Split the first line by spaces to extract method and path
       const [method, path,] = firstLine.split(" ");
   
@@ -39,6 +39,20 @@ if (cluster.isMaster) {
       else if(path == '/') {
           socket.write("HTTP/1.1 200 OK\r\n\r\n")
       }
+      else if(path.startsWith('/files') && method == "POST") {
+        directory = process.argv[3];
+        filename = path.split("/files/")[1];
+        let dr = requestLines[requestLines.length-1]
+        fs.writeFile(directory + filename, dr, (err) => {
+          if (err) {
+            socket.write("HTTP/1.1 404 OK\r\n\r\n");
+          }
+          else {
+            console.log('Data written to file successfully');
+            socket.write("HTTP/1.1 201 OK\r\n\r\n");
+          }
+        });
+      }
       else if(path.startsWith('/files')) {
         directory = process.argv[3];
         filename = path.split("/files/")[1];
@@ -47,7 +61,7 @@ if (cluster.isMaster) {
             socket.write("HTTP/1.1 404 OK\r\n\r\n");
           }
           socket.write(
-            `HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: ${data.length}\r\n\r\n${data}`
+            `HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: ${data?.length}\r\n\r\n${data}`
           );
   1
         });

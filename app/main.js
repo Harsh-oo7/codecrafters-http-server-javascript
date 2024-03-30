@@ -16,7 +16,7 @@ const server = net.createServer((socket) => {
     console.log("Method:", method);
     console.log("Path:", path);
 
-    if(path.includes('/echo')) {
+    if(path.startsWith('/echo/')) {
         const content = path.replace('/echo/', '');
         socket.write(`HTTP/1.1 200 OK\r\n`+`Content-Type: text/plain\r\n` + `Content-Length: ${content.length}\r\n` + `\r\n` + `${content}`);
     }

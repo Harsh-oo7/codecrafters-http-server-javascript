@@ -46,6 +46,9 @@ if (cluster.isMaster) {
         fs.writeFile(directory + filename, dr, (err) => {
           if (err) {
             socket.write("HTTP/1.1 404 OK\r\n\r\n");
+            socket.end();
+            server.close();
+            return;
           }
           else {
             console.log('Data written to file successfully');
@@ -59,6 +62,8 @@ if (cluster.isMaster) {
         fs.readFile(directory + filename, "utf8", (err, data) => {
           if (err) {
             socket.write("HTTP/1.1 404 OK\r\n\r\n");
+            socket.end();
+            server.close();
             return;
           }
           socket.write(

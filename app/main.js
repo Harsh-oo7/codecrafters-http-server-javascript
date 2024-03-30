@@ -1,6 +1,8 @@
 const net = require("net");
 const numCPUs = require("os").cpus().length;
 const cluster = require("cluster");
+const fs = require("node:fs");
+
 
 // You can use print statements as follows for debugging, they'll be visible when running tests.
 console.log("Logs from your program will appear here!");
@@ -36,6 +38,19 @@ if (cluster.isMaster) {
       }
       else if(path == '/') {
           socket.write("HTTP/1.1 200 OK\r\n\r\n")
+      }
+      else if(path.startsWith('/files')) {
+        directory = process.argv[3];
+        filename = path.split("/files/")[1];
+        fs.readFile(directory + filename, "utf8", (err, data) => {
+          if (err) {
+            socket.write("HTTP/1.1 404 OK\r\n\r\n");
+          }
+          socket.write(
+            `HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: ${data.length}\r\n\r\n${data}`
+          );
+  1
+        });
       }
       else 
           socket.write("HTTP/1.1 404 OK\r\n\r\n")

@@ -59,6 +59,7 @@ if (cluster.isMaster) {
         fs.readFile(directory + filename, "utf8", (err, data) => {
           if (err) {
             socket.write("HTTP/1.1 404 OK\r\n\r\n");
+            return;
           }
           socket.write(
             `HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: ${data?.length}\r\n\r\n${data}`

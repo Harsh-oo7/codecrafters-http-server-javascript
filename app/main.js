@@ -16,8 +16,11 @@ const server = net.createServer((socket) => {
     console.log("Method:", method);
     console.log("Path:", path);
 
-    if(path == '/')
-        socket.write("HTTP/1.1 200 OK\r\n\r\n");
+    if(path.includes('/echo')) {
+        let ln = path.split('/')[2]
+        console.log("ln", ln)
+        socket.write(`HTTP/1.1 200 OK\r\n`+`Content-Type: text/plain\r\n` + `Content-Length: ${ln.length}\r\n` + `\r\n` + `${ln}`);
+    }
     else 
         socket.write("HTTP/1.1 404 OK\r\n\r\n")
     server.close();

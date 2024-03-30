@@ -24,9 +24,9 @@ const server = net.createServer((socket) => {
         const content = path.replace('/echo/', '');
         socket.write(`HTTP/1.1 200 OK\r\n`+`Content-Type: text/plain\r\n` + `Content-Length: ${content.length}\r\n` + `\r\n` + `${content}`);
     }
-    else if(path.startsWith('/user-agent')) {
+    else if(path == '/user-agent') {
       // const content = path.replace('/echo/', '');
-      socket.write(`HTTP/1.1 200 OK\r\n`+`Content-Type: text/plain\r\n` + `Content-Length: ${value.length}\r\n` + `\r\n` + `${value.trim()}`);
+      socket.write(`HTTP/1.1 200 OK\r\n`+`Content-Type: text/plain\r\n` + `Content-Length: ${value.length}\r\n` + `\r\n` + `${value.slice(1)}`);
     }
     else if(path == '/') {
         socket.write("HTTP/1.1 200 OK\r\n\r\n")

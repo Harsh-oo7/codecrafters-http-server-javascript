@@ -17,7 +17,7 @@ if (cluster.isMaster) {
       const requestData = data.toString(); // Convert the buffer to a string
       const requestLines = requestData.split("\r\n"); // Split by line breaks
       const firstLine = requestLines[0]; // First line contains the request method, path, and HTTP version
-      const headerValue = requestLines.find((line) => line.includes('User-Agent')).replace('User-Agent: ', '');;
+      const headerValue = requestLines.find((line) => line?.includes('User-Agent'))?.replace('User-Agent: ', '');;
   
       console.log("requestLines", headerValue)
       // Split the first line by spaces to extract method and path

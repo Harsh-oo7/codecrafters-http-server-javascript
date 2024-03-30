@@ -20,8 +20,11 @@ const server = net.createServer((socket) => {
         const content = path.replace('/echo/', '');
         socket.write(`HTTP/1.1 200 OK\r\n`+`Content-Type: text/plain\r\n` + `Content-Length: ${content.length}\r\n` + `\r\n` + `${content}`);
     }
-    else 
+    else if(path == '/') {
         socket.write("HTTP/1.1 200 OK\r\n\r\n")
+    }
+    else 
+        socket.write("HTTP/1.1 404 OK\r\n\r\n")
     server.close();
   });
   socket.on("close", () => {

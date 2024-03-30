@@ -63,7 +63,6 @@ if (cluster.isMaster) {
           socket.write(
             `HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: ${data?.length}\r\n\r\n${data}`
           );
-  1
         });
       }
       else 

@@ -23,7 +23,7 @@ const server = net.createServer((socket) => {
         socket.write(`HTTP/1.1 200 OK\r\n`+`Content-Type: text/plain\r\n` + `Content-Length: ${content.length}\r\n` + `\r\n` + `${content}`);
     }
     else if(path.startsWith('/user-agent')) {
-      socket.write(`HTTP/1.1 200 OK\r\n`+`Content-Type: text/plain\r\n` + `Content-Length: ${headerValue.length}\r\n` + `\r\n` + `${headerValue.slice(1)}`);
+      socket.write(`HTTP/1.1 200 OK\r\n`+`Content-Type: text/plain\r\n` + `Content-Length: ${headerValue.length}\r\n` + `\r\n` + `${headerValue}`);
       return;
     }
     else if(path == '/') {

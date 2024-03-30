@@ -5,8 +5,21 @@ console.log("Logs from your program will appear here!");
 
 // Uncomment this to pass the first stage
 const server = net.createServer((socket) => {
-  socket.on("data", () => {
-    socket.write("HTTP/1.1 200 OK\r\n\r\n");
+  socket.on("data", (data) => {
+    const requestData = data.toString(); // Convert the buffer to a string
+    const requestLines = requestData.split("\r\n"); // Split by line breaks
+    const firstLine = requestLines[0]; // First line contains the request method, path, and HTTP version
+
+    // Split the first line by spaces to extract method and path
+    const [method, path,] = firstLine.split(" ");
+
+    console.log("Method:", method);
+    console.log("Path:", path);
+
+    if(path == '/')
+        socket.write("HTTP/1.1 200 OK\r\n\r\n");
+    else 
+        socket.write("HTTP/1.1 404 OK\r\n\r\n")
     server.close();
   });
   socket.on("close", () => {
